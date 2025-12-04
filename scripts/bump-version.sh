@@ -62,3 +62,4 @@ echo "Next steps:"
 echo "1. Build the package: pnpm build"
 echo "2. Publish: ./scripts/publish.sh $PACKAGE_NAME --otp=<code>"
 
+

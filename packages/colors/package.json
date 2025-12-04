@@ -1,6 +1,6 @@
 {
   "name": "@shamim-ahmed/colors",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "author": "Md Al Amin",
   "type": "module",
   "main": "build/colors.umd.js",
@@ -14,13 +14,13 @@
     "build",
     "build-types"
   ],
-  "homepage": "https://github.com/shamim-ahmed/jskit/tree/master/packages/colors",
+  "homepage": "https://github.com/devshamim/jskit/tree/master/packages/colors",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/shamim-ahmed/jskit.git"
+    "url": "git+https://github.com/devshamim/jskit.git"
   },
   "bugs": {
-    "url": "https://github.com/shamim-ahmed/jskit/issues"
+    "url": "https://github.com/devshamim/jskit/issues"
   },
   "publishConfig": {
     "access": "public"

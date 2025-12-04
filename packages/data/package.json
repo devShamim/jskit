@@ -1,6 +1,6 @@
 {
   "name": "@shamim-ahmed/data",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "author": "Md Al Amin",
   "type": "module",
   "main": "build/data.umd.js",
@@ -14,13 +14,13 @@
     "build",
     "build-types"
   ],
-  "homepage": "https://github.com/shamim-ahmed/jskit/tree/master/packages/data",
+  "homepage": "https://github.com/devshamim/jskit/tree/master/packages/data",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/shamim-ahmed/jskit.git"
+    "url": "git+https://github.com/devshamim/jskit.git"
   },
   "bugs": {
-    "url": "https://github.com/shamim-ahmed/jskit/issues"
+    "url": "https://github.com/devshamim/jskit/issues"
   },
   "publishConfig": {
     "access": "public"

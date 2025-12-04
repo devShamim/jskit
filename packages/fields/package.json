@@ -1,6 +1,6 @@
 {
   "name": "@shamim-ahmed/fields",
-  "version": "0.0.39",
+  "version": "0.0.40",
   "description": "Reusable fields package for WordPress MVC JSKit.",
   "author": "Md Al Amin",
   "license": "MIT",
@@ -24,13 +24,13 @@
     "gutenberg",
     "wpmvc"
   ],
-  "homepage": "https://github.com/shamim-ahmed/jskit/tree/master/packages/fields",
+  "homepage": "https://github.com/devshamim/jskit/tree/master/packages/fields",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/shamim-ahmed/jskit.git"
+    "url": "git+https://github.com/devshamim/jskit.git"
   },
   "bugs": {
-    "url": "https://github.com/shamim-ahmed/jskit/issues"
+    "url": "https://github.com/devshamim/jskit/issues"
   },
   "publishConfig": {
     "access": "public"
