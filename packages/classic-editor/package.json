@@ -1,6 +1,6 @@
 {
   "name": "@shamim-ahmed/classic-editor",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "A React component for integrating WordPress' classic editor using wp.editor API",
   "author": "Md Al Amin",
   "license": "MIT",
