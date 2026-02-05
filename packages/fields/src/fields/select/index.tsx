@@ -13,10 +13,15 @@ import { StyledHelpText, StyledLabel, Wrapper } from './styles';
 import { SelectFieldProps } from './types';
 
 export default function Select( props: SelectFieldProps ) {
+	// The components package is built/published separately; widen typing here
+	// so fields can pass newer react-select props (like `isClearable`).
+	const SelectComponentAny = SelectComponent as any;
+
 	const { field, attributes } = props;
 	const { options, description, label, optionsApi, onFetchSuccess } =
 		field || {};
-	const isMulti = Boolean( field?.isMulti );
+	const isMulti = props.isMulti ?? field?.isMulti ?? false;
+	const isClearable = props.isClearable ?? field?.isClearable;
 	const normalizedOptions = isFunction( options )
 		? options( attributes )
 		: options || [];
@@ -33,7 +38,7 @@ export default function Select( props: SelectFieldProps ) {
 					</StyledLabel>
 				) }
 
-				<SelectComponent
+				<SelectComponentAny
 					value={ value }
 					options={ normalizedOptions }
 					onChange={ ( value: any ) =>
@@ -43,7 +48,7 @@ export default function Select( props: SelectFieldProps ) {
 					classNamePrefix={ field?.classNamePrefix }
 					isDisabled={ isDisabled( props ) }
 					isMulti={ isMulti }
-					isClearable={ field?.isClearable }
+					isClearable={ isClearable }
 					menuPosition={ field?.menuPosition }
 					optionsApi={
 						isFunction( optionsApi )
