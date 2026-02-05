@@ -43,6 +43,7 @@ export default function Select( props: SelectFieldProps ) {
 					classNamePrefix={ field?.classNamePrefix }
 					isDisabled={ isDisabled( props ) }
 					isMulti={ isMulti }
+					isClearable={ field?.isClearable }
 					menuPosition={ field?.menuPosition }
 					optionsApi={
 						isFunction( optionsApi )

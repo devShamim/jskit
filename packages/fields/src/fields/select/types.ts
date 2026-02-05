@@ -5,6 +5,7 @@ export type SelectFieldType = BaseField & {
 	type: 'select';
 	options: Options;
 	isMulti?: boolean;
+	isClearable?: boolean;
 	menuPosition?: 'fixed' | 'absolute';
 	optionsApi?: string | ( ( attributes: Record< string, any > ) => string );
 	onFetchSuccess?: ( options: Options ) => void;
@@ -17,4 +18,5 @@ export type SelectFieldType = BaseField & {
 export type SelectFieldProps = BaseFieldProps & {
 	field: SelectFieldType;
 	isMulti?: boolean;
+	isClearable?: boolean;
 };
