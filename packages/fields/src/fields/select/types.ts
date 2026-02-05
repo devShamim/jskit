@@ -8,11 +8,9 @@ export type SelectFieldType = BaseField & {
 	menuPosition?: 'fixed' | 'absolute';
 	optionsApi?: string | ( ( attributes: Record< string, any > ) => string );
 	onFetchSuccess?: ( options: Options ) => void;
-	select?: {
-		className?: string;
-		classNamePrefix?: string;
-		styles?: any;
-	};
+	className?: string;
+	classNamePrefix?: string;
+	styles?: any;
 };
 
 // Typed props for each specific field

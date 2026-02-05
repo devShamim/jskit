@@ -39,8 +39,8 @@ export default function Select( props: SelectFieldProps ) {
 					onChange={ ( value: any ) =>
 						updateAttribute( value, props )
 					}
-					className={ field?.select?.className }
-					classNamePrefix={ field?.select?.classNamePrefix }
+					className={ field?.className }
+					classNamePrefix={ field?.classNamePrefix }
 					isDisabled={ isDisabled( props ) }
 					isMulti={ isMulti }
 					menuPosition={ field?.menuPosition }
@@ -50,7 +50,7 @@ export default function Select( props: SelectFieldProps ) {
 							: optionsApi
 					}
 					onFetchSuccess={ onFetchSuccess }
-					styles={ field?.select?.styles }
+					styles={ field?.styles }
 				/>
 			</Wrapper>
 
