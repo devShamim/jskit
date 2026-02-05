@@ -79,9 +79,15 @@ export function updateAttribute( value: any, fieldProps: FieldProps ) {
 		updatedValues = value;
 	}
 
-	setAttributes( {
-		[ attrKey ]: updatedValues,
-	} );
+	if ( field?.forceAttrKey ) {
+		setAttributes( {
+			[ field?.forceAttrKey ]: updatedValues,
+		} );
+	} else {
+		setAttributes( {
+			[ attrKey ]: updatedValues,
+		} );
+	}
 
 	//@ts-ignore
 	if ( field?.onChange ) {
