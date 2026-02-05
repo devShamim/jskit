@@ -117,27 +117,27 @@ export default function SelectComponent( props: props ) {
 			onMenuClose={ () => setMenuIsOpen( false ) }
 			components={ {
 				DropdownIndicator: DropdownIndicator( menuIsOpen ),
-				ClearIndicator: () => null,
+				ClearIndicator: isClearable ? components.ClearIndicator : () => null,
 				IndicatorSeparator: () => null,
 			} }
 			styles={ {
-				menu: ( base ) => ( {
+				menu: ( base: any ) => ( {
 					...base,
 					zIndex: 10,
 					...styles?.menu,
 				} ),
-				menuPortal: ( base ) => ( {
+				menuPortal: ( base: any ) => ( {
 					...base,
 					zIndex: 100000,
 				} ),
-				control: ( baseStyles, state ) => {
+				control: ( baseStyles: any, state: any ) => {
 					return {
 						...baseStyles,
 						...styles?.control,
 					};
 				},
 			} }
-			theme={ ( theme ) => ( {
+			theme={ ( theme: any ) => ( {
 				...theme,
 				colors: {
 					...theme.colors,
