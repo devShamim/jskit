@@ -42,6 +42,7 @@ type props = {
 	classNamePrefix?: string;
 	isDisabled?: boolean;
 	isMulti?: boolean;
+	isClearable?: boolean;
 	menuPosition?: 'fixed' | 'absolute';
 	styles?: any;
 	optionsApi?: string;
@@ -57,6 +58,7 @@ export default function SelectComponent( props: props ) {
 		value: rawValue,
 		onChange,
 		isMulti,
+		isClearable,
 	} = props;
 	const [ menuIsOpen, setMenuIsOpen ] = useState( false );
 	const { options: fetchedOptions, isLoading } = useApiOptions( {
@@ -105,6 +107,7 @@ export default function SelectComponent( props: props ) {
 			options={ normalizedOptions }
 			onChange={ handleChange }
 			value={ value }
+			isClearable={ isClearable }
 			isLoading={ isLoading }
 			menuIsOpen={ menuIsOpen || undefined }
 			classNamePrefix={ props.classNamePrefix || 'wpmvc' }
