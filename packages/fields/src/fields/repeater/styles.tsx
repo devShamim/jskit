@@ -46,8 +46,10 @@ export const ItemContainer = styled.div< { $dragging: number } >`
 	background: #fff;
 	border: 1px solid #e0e0e0;
 
-	z-index: ${ ( props ) => ( props.$dragging ? 999 : 1 ) };
+	z-index: ${(props) => (props.$dragging ? 999 : 1)};
 	transition: all 0.2s ease;
+
+	/* Old compact styles for quickFields layout */
 	&.repeater-item--compact {
 		.repeater-item-label {
 			position: absolute;
@@ -65,6 +67,94 @@ export const ItemContainer = styled.div< { $dragging: number } >`
 			padding-bottom: 0;
 		}
 	}
+
+	/* New compact styles for uiStyle: 'compact' */
+	&.repeater-item--ui-compact {
+		border: 0 none;
+
+		.repeater-header-content__inner {
+			gap: 5px;
+			padding: 0;
+		}
+
+		.repeater-item-label {
+			position: static !important;
+			flex: none !important;
+			width: auto !important;
+			overflow: visible !important;
+			transform: none !important;
+			.repeater-sort-button{
+				padding: 0;
+			}
+		}
+
+		.repeater-default-selection {
+			display: flex;
+			align-items: center;
+			flex: none;
+			padding-left: 1px;
+
+			input[type='radio'],
+			input[type='checkbox'] {
+				width: 18px;
+				height: 18px;
+				margin: 0;
+				cursor: pointer;
+				accent-color: #007cba;
+			}
+
+			input[type='radio']:checked:before {
+				width: 8px;
+				height: 8px;
+				margin: 4px;
+			}
+		}
+
+		.repeater-compact-fields {
+			display: flex;
+			flex: 1;
+			gap: 8px;
+			align-items: center;
+			min-width: 0;
+			left:0 !important;
+		}
+
+		.repeater-compact-input {
+			flex: 1;
+			border: 1px solid #e0e0e0;
+			padding: 4px 12px;
+			font-size: 14px;
+			border-radius: 4px;
+			outline: none;
+			background: #fff;
+			color: #1e1e1e;
+			min-width: 0;
+			width: 100px;
+
+			&:focus {
+				border-color: #007cba;
+				box-shadow: 0 0 0 1px #007cba;
+			}
+		}
+
+		.repeater-compact-input-numeric {
+			width: 80px;
+			flex: none;
+		}
+
+		.header-actions {
+			display: flex;
+			flex: none;
+			padding-right: 4px;
+			position: static;
+			visibility: visible;
+			opacity: 1;
+			transform: none;
+		}
+
+
+	}
+
 	&.repeater-item--overlay {
 		background-color: #f1f1f1;
 	}
@@ -90,8 +180,8 @@ export const ItemHeader = styled.div< { $fixed: string } >`
 	display: flex;
 	justify-content: space-between;
 	width: 100%;
-	cursor: ${ ( props ) =>
-		'true' === props.$fixed ? 'inherit' : 'pointer' };
+	cursor: ${(props) =>
+		'true' === props.$fixed ? 'inherit' : 'pointer'};
 	&.repeater-header--has-clone {
 		.repeater-item-label {
 			width: 102px;
@@ -171,13 +261,13 @@ export const ButtonBase = styled.div`
 	}
 `;
 
-export const SortButton = styled( ButtonBase )`
+export const SortButton = styled(ButtonBase)`
 	cursor: grab;
 	flex: none;
 	padding: 0 6px;
 `;
 
-export const Action = styled( ButtonBase )`
+export const Action = styled(ButtonBase)`
 	&.copy {
 		border-left: 1px solid #e0e0e0;
 	}

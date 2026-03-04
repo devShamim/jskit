@@ -9,7 +9,7 @@ import { BaseField, BaseFieldProps, FieldsType } from '../../types/field';
 export type Item = {
 	id: number;
 	collapsed: boolean;
-	[ key: string ]: any;
+	[key: string]: any;
 };
 
 export type Index = {
@@ -31,28 +31,32 @@ export type RepeaterFieldType = BaseField & {
 	className?: string;
 	showActionTooltip?: boolean;
 	quickFields?: FieldsType;
-	itemDefaultAttributes?: Record< string, any >;
+	itemDefaultAttributes?: Record<string, any>;
+	uiStyle?: 'default' | 'compact';
+	enableDefaultSelection?: boolean;
+	defaultSelectionType?: 'radio' | 'checkbox';
+	enableNumericValues?: boolean;
 };
 
 export type RepeaterFieldProps = BaseFieldProps & {
 	field: RepeaterFieldType;
-	[ key: string ]: any;
+	[key: string]: any;
 };
 
 export type SortableItemProps = {
 	item: Item;
-	onRemove: ( id: number ) => void;
-	onDuplicate: ( id: number ) => void;
-	onToggleCollapse: ( id: number ) => void;
+	onRemove: (id: number) => void;
+	onDuplicate: (id: number) => void;
+	onToggleCollapse: (id: number) => void;
 	repeaterProps: RepeaterFieldProps;
 	isDisabledRemove: boolean;
 	isHeaderClickable?: boolean;
 };
 
 export type ActionsProps = {
-	onDuplicate: ( id: number ) => void;
-	onRemove: ( id: number ) => void;
-	onToggleCollapse: ( id: number ) => void;
+	onDuplicate: (id: number) => void;
+	onRemove: (id: number) => void;
+	onToggleCollapse: (id: number) => void;
 	item: Item;
 };
 
@@ -61,11 +65,11 @@ export type RepeaterItemHeaderProps = {
 	field: RepeaterFieldType;
 	repeaterProps: RepeaterFieldProps;
 	quickFields?: FieldsType;
-	setAttributes: ( attrs: any ) => void;
-	actionsComponent?: React.ComponentType< ActionsProps >;
-	onDuplicate?: ( id: number ) => void;
-	onRemove?: ( id: number ) => void;
-	onToggleCollapse?: ( id: number ) => void;
+	setAttributes: (attrs: any) => void;
+	actionsComponent?: React.ComponentType<ActionsProps>;
+	onDuplicate?: (id: number) => void;
+	onRemove?: (id: number) => void;
+	onToggleCollapse?: (id: number) => void;
 	isDisabledRemove?: boolean;
 	isOverlay?: boolean;
 	dragAttributes?: any;

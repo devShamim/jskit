@@ -20,7 +20,7 @@ import { RepeaterItemHeader } from './RepeaterItemHeader';
 import { ItemContainer, ItemHeader } from './styles';
 import { ActionsProps, SortableItemProps } from './types';
 
-const SortableItem = ( {
+const SortableItem = ({
 	item,
 	onRemove,
 	onDuplicate,
@@ -28,7 +28,7 @@ const SortableItem = ( {
 	repeaterProps,
 	isDisabledRemove,
 	isHeaderClickable = true,
-}: SortableItemProps ) => {
+}: SortableItemProps) => {
 	const {
 		attributes: dragAttributes,
 		listeners,
@@ -36,117 +36,120 @@ const SortableItem = ( {
 		transform,
 		transition,
 		isDragging,
-	} = useSortable( { id: item.id } );
+	} = useSortable({ id: item.id });
 
 	const { attrKey, attributes, field, setAttributes } = repeaterProps;
-	const attribute = attributes[ attrKey ];
-	const itemIndex = findIndex( attribute, { id: item.id } );
-	const quickFields = useQuickFields( field );
+	const attribute = attributes[attrKey];
+	const itemIndex = findIndex(attribute, { id: item.id });
+	const quickFields = useQuickFields(field);
 
 	const ActionsComponent = field?.actions as unknown as
-		| React.ComponentType< ActionsProps >
+		| React.ComponentType<ActionsProps>
 		| undefined;
 
-	const updateAttributes = ( newAttributes: any ) => {
-		const updatedValues = [ ...attribute ];
-		updatedValues[ itemIndex ] = {
-			...updatedValues[ itemIndex ],
+	const updateAttributes = (newAttributes: any) => {
+		const updatedValues = [...attribute];
+		updatedValues[itemIndex] = {
+			...updatedValues[itemIndex],
 			...newAttributes,
 		};
-		setAttributes( { [ attrKey ]: updatedValues } );
+		setAttributes({ [attrKey]: updatedValues });
 
-		if ( field?.onChange ) {
-			field.onChange( {
+		if (field?.onChange) {
+			field.onChange({
 				...repeaterProps,
 				updatedValues,
 				repeaterIndex: itemIndex,
-			} );
+			});
 		}
 	};
 
+	const isCompact = field?.uiStyle === 'compact';
+
 	return (
 		<ItemContainer
-			ref={ setNodeRef }
-			style={ {
-				transform: CSS.Transform.toString( transform ),
+			ref={setNodeRef}
+			style={{
+				transform: CSS.Transform.toString(transform),
 				transition,
 				// opacity: isDragging ? 0 : undefined,
-			} }
-			$dragging={ isDragging ? 1 : 0 }
-			className={ clsx( 'repeater-item', {
+			}}
+			$dragging={isDragging ? 1 : 0}
+			className={clsx('repeater-item', {
 				'repeater-item--compact': field?.quickFields,
+				'repeater-item--ui-compact': isCompact,
 				'repeater-item--dragging': isDragging,
-			} ) }
-			data-id={ item.id }
+			})}
+			data-id={item.id}
 		>
 			<ItemHeader
-				$fixed={ field?.fixed ? field.fixed.toString() : 'false' }
+				$fixed={field?.fixed ? field.fixed.toString() : 'false'}
 				onClick={
 					isHeaderClickable
-						? ( e ) => {
-								e.preventDefault();
-								onToggleCollapse( item.id );
-						  }
+						? (e) => {
+							e.preventDefault();
+							onToggleCollapse(item.id);
+						}
 						: undefined
 				}
-				className={ clsx( 'repeater-header', {
+				className={clsx('repeater-header', {
 					'repeater-header--has-clone':
 						field?.allowDuplication === undefined ||
 						field?.allowDuplication,
 					'repeater-top-header-active': field?.showHeader,
-				} ) }
+				})}
 			>
 				<RepeaterItemHeader
-					item={ attribute[ itemIndex ] }
-					field={ field }
-					repeaterProps={ repeaterProps }
-					quickFields={ quickFields }
-					setAttributes={ updateAttributes }
-					actionsComponent={ ActionsComponent }
-					onDuplicate={ onDuplicate }
-					onRemove={ onRemove }
-					onToggleCollapse={ onToggleCollapse }
-					isDisabledRemove={ isDisabledRemove }
-					dragListeners={ listeners }
-					dragAttributes={ dragAttributes }
+					item={attribute[itemIndex]}
+					field={field}
+					repeaterProps={repeaterProps}
+					quickFields={quickFields}
+					setAttributes={updateAttributes}
+					actionsComponent={ActionsComponent}
+					onDuplicate={onDuplicate}
+					onRemove={onRemove}
+					onToggleCollapse={onToggleCollapse}
+					isDisabledRemove={isDisabledRemove}
+					dragListeners={listeners}
+					dragAttributes={dragAttributes}
 				/>
 			</ItemHeader>
 
-			{ ( () => {
+			{!isCompact && (() => {
 				// Check if fields are missing
-				if ( ! field?.fields ) return false;
+				if (!field?.fields) return false;
 
 				// Get fields object (either from function call or direct object)
-				const fieldsObject = isFunction( field.fields )
-					? field.fields( attribute[ itemIndex ] )
+				const fieldsObject = isFunction(field.fields)
+					? field.fields(attribute[itemIndex])
 					: field.fields;
 
 				// Validate fields object is a non-empty plain object
 				return (
-					isPlainObject( fieldsObject ) &&
-					! isEmpty( fieldsObject ) &&
-					! item.collapsed
+					isPlainObject(fieldsObject) &&
+					!isEmpty(fieldsObject) &&
+					!item.collapsed
 				);
-			} )() && (
-				<div
-					style={ {
-						padding: '15px 25px',
-						borderTop: '1px solid #e0e0e0',
-					} }
-					className="repeater-item-content"
-				>
-					<PrivateFields
-						{ ...repeaterProps }
-						attributes={ attribute[ itemIndex ] }
-						setAttributes={ updateAttributes }
-						fields={
-							isFunction( field.fields )
-								? field?.fields( attribute[ itemIndex ] )
-								: field?.fields
-						}
-					/>
-				</div>
-			) }
+			})() && (
+					<div
+						style={{
+							padding: '15px 25px',
+							borderTop: '1px solid #e0e0e0',
+						}}
+						className="repeater-item-content"
+					>
+						<PrivateFields
+							{...repeaterProps}
+							attributes={attribute[itemIndex]}
+							setAttributes={updateAttributes}
+							fields={
+								isFunction(field.fields)
+									? field?.fields(attribute[itemIndex])
+									: field?.fields
+							}
+						/>
+					</div>
+				)}
 		</ItemContainer>
 	);
 };
@@ -154,7 +157,7 @@ const SortableItem = ( {
 // Create a named export with explicit typing
 export const MemoizedSortableItem = memo(
 	SortableItem
-) as React.NamedExoticComponent< SortableItemProps >;
+) as React.NamedExoticComponent<SortableItemProps>;
 
 // Keep default export for backward compatibility
 export default MemoizedSortableItem;

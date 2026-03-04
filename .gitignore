@@ -6,3 +6,5 @@ pnpm-lock.yaml
 pnpm-workspace.yaml
 ./scripts
 ./PUBLISHING.md
+.yalc
+yalc.lock

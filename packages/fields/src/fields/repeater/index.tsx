@@ -55,259 +55,261 @@ import {
 import { Index, Item, RepeaterFieldProps } from './types';
 import { getMaxId } from './utils';
 
-export default function Repeater( props: RepeaterFieldProps ) {
+export default function Repeater(props: RepeaterFieldProps) {
 	const { field, attributes, attrKey, setAttributes } = props;
 
-	const attribute = attributes[ attrKey ] ?? [];
-	const itemListRef = useRef< HTMLDivElement >( null ); // Ref for the scrollable list
-	const [ newItemAdded, setNewItemAdded ] = useState( false );
-	const [ activeId, setActiveId ] = useState< number | null >( null );
-	const [ overlayWidth, setOverlayWidth ] = useState< number | null >( null );
-	const quickFields = useQuickFields( field );
+	const attribute = attributes[attrKey] ?? [];
+	const itemListRef = useRef<HTMLDivElement>(null); // Ref for the scrollable list
+	const [newItemAdded, setNewItemAdded] = useState(false);
+	const [activeId, setActiveId] = useState<number | null>(null);
+	const [overlayWidth, setOverlayWidth] = useState<number | null>(null);
+	const quickFields = useQuickFields(field);
 
 	const ActionsComponent = field?.actions as unknown as
-		| React.ComponentType< any >
+		| React.ComponentType<any>
 		| undefined;
 
 	const sensors = useSensors(
-		useSensor( PointerSensor ),
-		useSensor( KeyboardSensor )
+		useSensor(PointerSensor),
+		useSensor(KeyboardSensor)
 	);
 
-	const handleDragStart = useCallback( ( event: DragStartEvent ) => {
+	const handleDragStart = useCallback((event: DragStartEvent) => {
 		const { active } = event;
-		setActiveId( ( active.id as number ) ?? null );
+		setActiveId((active.id as number) ?? null);
 		// Measure the active item's width to mirror in overlay
 		const el = document.querySelector(
-			`.repeater-item[data-id="${ String( active.id ) }"]`
+			`.repeater-item[data-id="${String(active.id)}"]`
 		) as HTMLElement | null;
-		if ( el ) {
-			setOverlayWidth( el.getBoundingClientRect().width );
+		if (el) {
+			setOverlayWidth(el.getBoundingClientRect().width);
 		}
-	}, [] );
+	}, []);
 
 	const handleDragEnd = useCallback(
-		( event: DragEndEvent ) => {
+		(event: DragEndEvent) => {
 			const { active, over } = event;
-			if ( ! over || active.id === over.id ) return;
+			if (!over || active.id === over.id) return;
 			const oldIndex = attribute.findIndex(
-				( item: Item ) => item.id === active.id
+				(item: Item) => item.id === active.id
 			);
 			const newIndex = attribute.findIndex(
-				( item: Item ) => item.id === over.id
+				(item: Item) => item.id === over.id
 			);
-			const newAttributes = arrayMove( attribute, oldIndex, newIndex );
-			setAttributes( { [ attrKey ]: newAttributes } );
-			setActiveId( null );
-			setOverlayWidth( null );
+			const newAttributes = arrayMove(attribute, oldIndex, newIndex);
+			setAttributes({ [attrKey]: newAttributes });
+			setActiveId(null);
+			setOverlayWidth(null);
 		},
-		[ attribute, setAttributes, attrKey ]
+		[attribute, setAttributes, attrKey]
 	);
 
-	const handleDragCancel = useCallback( () => {
-		setActiveId( null );
-		setOverlayWidth( null );
-	}, [] );
+	const handleDragCancel = useCallback(() => {
+		setActiveId(null);
+		setOverlayWidth(null);
+	}, []);
 
-	const renderOverlay = useCallback( () => {
-		if ( activeId === null ) return null;
-		const activeItem = attribute.find( ( it: Item ) => it.id === activeId );
-		if ( ! activeItem ) return null;
+	const renderOverlay = useCallback(() => {
+		if (activeId === null) return null;
+		const activeItem = attribute.find((it: Item) => it.id === activeId);
+		if (!activeItem) return null;
 		return (
 			<ItemContainer
-				$dragging={ 1 }
-				className={ clsx( 'repeater-item repeater-item--overlay', {
-					'repeater-item--compact': !! quickFields,
-				} ) }
-				style={ overlayWidth ? { width: overlayWidth } : undefined }
+				$dragging={1}
+				className={clsx('repeater-item repeater-item--overlay', {
+					'repeater-item--compact': !!quickFields,
+					'repeater-item--ui-compact': field?.uiStyle === 'compact',
+				})}
+				style={overlayWidth ? { width: overlayWidth } : undefined}
 			>
 				<ItemHeader
-					$fixed={ field?.fixed ? field.fixed.toString() : 'false' }
-					className={ clsx( 'repeater-header', {
+					$fixed={field?.fixed ? field.fixed.toString() : 'false'}
+					className={clsx('repeater-header', {
 						'repeater-header--has-clone':
 							field?.allowDuplication === undefined ||
 							field?.allowDuplication,
 						'repeater-top-header-active': field?.showHeader,
-					} ) }
+					})}
 				>
 					<RepeaterItemHeader
-						item={ activeItem }
-						field={ field }
-						repeaterProps={ props }
-						quickFields={ quickFields }
-						setAttributes={ () => {} }
-						actionsComponent={ ActionsComponent }
-						isOverlay={ true }
+						item={activeItem}
+						field={field}
+						repeaterProps={props}
+						quickFields={quickFields}
+						setAttributes={() => { }}
+						actionsComponent={ActionsComponent}
+						isOverlay={true}
 					/>
 				</ItemHeader>
 			</ItemContainer>
 		);
-	}, [ activeId, attribute, quickFields, overlayWidth, field, props ] );
+	}, [activeId, attribute, quickFields, overlayWidth, field, props]);
 
-	useEffect( () => {
-		if ( newItemAdded && itemListRef.current ) {
+	useEffect(() => {
+		if (newItemAdded && itemListRef.current) {
 			// Scroll to bottom of the list
-			itemListRef.current.scrollTo( {
+			itemListRef.current.scrollTo({
 				top: itemListRef.current.scrollHeight,
 				behavior: 'smooth',
-			} );
-			setNewItemAdded( false );
+			});
+			setNewItemAdded(false);
 		}
-	}, [ attribute, newItemAdded ] );
+	}, [attribute, newItemAdded]);
 
-	const addItem = useCallback( () => {
+	const addItem = useCallback(() => {
 		const newItem = {
 			label: 'New Item',
 			...field?.itemDefaultAttributes,
-			id: getMaxId( attribute ) + 1,
+			id: getMaxId(attribute) + 1,
 			collapsed: true,
+			is_default: false,
 		};
-		const newAttributes = [ ...attribute, newItem ];
-		setAttributes( { [ attrKey ]: newAttributes } );
-		setNewItemAdded( true );
-	}, [ attribute, setAttributes, attrKey ] );
+		const newAttributes = [...attribute, newItem];
+		setAttributes({ [attrKey]: newAttributes });
+		setNewItemAdded(true);
+	}, [attribute, setAttributes, attrKey]);
 
 	const isDisabledRemove =
-		( undefined === field?.preventEmpty || field.preventEmpty ) &&
+		(undefined === field?.preventEmpty || field.preventEmpty) &&
 		attribute.length === 1;
 
 	const removeItem = useCallback(
-		( id: number ) => {
-			if ( isDisabledRemove ) {
+		(id: number) => {
+			if (isDisabledRemove) {
 				return;
 			}
 			const newAttributes = attribute.filter(
-				( item: Item ) => item.id !== id
+				(item: Item) => item.id !== id
 			);
-			setAttributes( { [ attrKey ]: newAttributes } );
+			setAttributes({ [attrKey]: newAttributes });
 		},
-		[ attribute, setAttributes, attrKey, isDisabledRemove ]
+		[attribute, setAttributes, attrKey, isDisabledRemove]
 	);
 
 	const duplicateItem = useCallback(
-		( id: number ) => {
+		(id: number) => {
 			const itemToDuplicate = attribute.find(
-				( item: Item ) => item.id === id
+				(item: Item) => item.id === id
 			);
-			if ( itemToDuplicate ) {
+			if (itemToDuplicate) {
 				const newItem = {
 					...itemToDuplicate,
-					id: getMaxId( attribute ) + 1,
+					id: getMaxId(attribute) + 1,
 				};
-				const newAttributes = [ ...attribute, newItem ];
-				setAttributes( { [ attrKey ]: newAttributes } );
+				const newAttributes = [...attribute, newItem];
+				setAttributes({ [attrKey]: newAttributes });
 			}
 		},
-		[ attribute, setAttributes, attrKey ]
+		[attribute, setAttributes, attrKey]
 	);
 
 	const toggleCollapse = useCallback(
-		( id: number ) => {
-			const newAttributes = attribute.map( ( item: Item ) =>
-				item.id === id ? { ...item, collapsed: ! item.collapsed } : item
+		(id: number) => {
+			const newAttributes = attribute.map((item: Item) =>
+				item.id === id ? { ...item, collapsed: !item.collapsed } : item
 			);
-			setAttributes( { [ attrKey ]: newAttributes } );
+			setAttributes({ [attrKey]: newAttributes });
 		},
-		[ attribute, setAttributes, attrKey ]
+		[attribute, setAttributes, attrKey]
 	);
 
 	return (
-		<div className={ `components-base-field wpmvc-repeater-wrapper` }>
-			{ props?.field?.label && (
+		<div className={`components-base-field wpmvc-repeater-wrapper`}>
+			{props?.field?.label && (
 				<StyledLabel className="repeater-label">
-					{ /* @ts-ignore */ }
-					<Label { ...props } />
+					{ /* @ts-ignore */}
+					<Label {...props} />
 				</StyledLabel>
-			) }
+			)}
 
 			<Container
-				className={ clsx( 'repeater-container', {
+				className={clsx('repeater-container', {
 					'repeater-container-header-active': field.showHeader,
-				} ) }
+				})}
 			>
 				<DndContext
-					sensors={ sensors }
-					collisionDetection={ closestCenter }
-					onDragStart={ handleDragStart }
-					onDragEnd={ handleDragEnd }
-					onDragCancel={ handleDragCancel }
-					modifiers={ [
+					sensors={sensors}
+					collisionDetection={closestCenter}
+					onDragStart={handleDragStart}
+					onDragEnd={handleDragEnd}
+					onDragCancel={handleDragCancel}
+					modifiers={[
 						restrictToVerticalAxis,
 						restrictToWindowEdges,
 						restrictToFirstScrollableAncestor,
-					] }
+					]}
 				>
 					<SortableContext
-						items={ attribute }
-						strategy={ verticalListSortingStrategy }
+						items={attribute}
+						strategy={verticalListSortingStrategy}
 					>
 						<ItemList
 							className="repeater-item-list"
-							ref={ itemListRef }
+							ref={itemListRef}
 						>
-							{ attribute.map( ( item: Item, index: Index ) => (
-								<Fragment key={ item.id }>
-									{ field.showHeader &&
-										Number( index ) === 0 &&
+							{attribute.map((item: Item, index: Index) => (
+								<Fragment key={item.id}>
+									{field.showHeader &&
+										Number(index) === 0 &&
 										field?.quickFields && (
 											<div className="repeater-item-list__top">
-												{ Object.keys(
+												{Object.keys(
 													field?.quickFields as Record<
 														string,
 														any
 													>
-												).map( ( key ) => (
+												).map((key) => (
 													<span
 														className="repeater-item-list__top-field-title"
-														key={ key }
+														key={key}
 													>
 														{
 															(
 																field?.quickFields as any
-															 )[ key ]?.label
+															)[key]?.label
 														}
 													</span>
-												) ) }
+												))}
 												<span className="repeater-item-list__top-action">
-													{ __(
+													{__(
 														'Settings',
 														'fields'
-													) }
+													)}
 												</span>
 											</div>
-										) }
+										)}
 									<SortableItem
-										item={ item }
-										repeaterProps={ props }
-										onRemove={ removeItem }
-										onDuplicate={ duplicateItem }
-										onToggleCollapse={ toggleCollapse }
-										isDisabledRemove={ isDisabledRemove }
+										item={item}
+										repeaterProps={props}
+										onRemove={removeItem}
+										onDuplicate={duplicateItem}
+										onToggleCollapse={toggleCollapse}
+										isDisabledRemove={isDisabledRemove}
 										isHeaderClickable={
 											field?.isHeaderClickable
 										}
 									/>
 								</Fragment>
-							) ) }
+							))}
 						</ItemList>
-						<DragOverlay dropAnimation={ null }>
-							{ renderOverlay() }
+						<DragOverlay dropAnimation={null}>
+							{renderOverlay()}
 						</DragOverlay>
 					</SortableContext>
 				</DndContext>
-				{ ! field?.fixed && (
+				{!field?.fixed && (
 					<ButtonContainer className="repeater-button-container">
 						<Button
-							onClick={ addItem }
+							onClick={addItem}
 							variant="tertiary"
 							size="small"
 						>
-							{ field?.addButtonText
+							{field?.addButtonText
 								? field.addButtonText
-								: '+ ADD ITEM' }
+								: '+ ADD ITEM'}
 						</Button>
 					</ButtonContainer>
-				) }
+				)}
 			</Container>
 		</div>
 	);
