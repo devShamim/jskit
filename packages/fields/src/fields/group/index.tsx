@@ -13,7 +13,7 @@ const GroupFields = styled.div< {
 } >`
 	/* Layout */
 	display: flex;
-	flex-direction: ${ ( { $isRow } ) => ( $isRow ? 'row' : 'column' ) };
+	flex-direction: ${({ $isRow }) => ($isRow ? 'row' : 'column')};
 	flex-wrap: wrap;
 	gap: 20px;
 
@@ -23,20 +23,19 @@ const GroupFields = styled.div< {
 	border-radius: 4px;
 	padding: 24px;
 
-	${ ( { $isRow, $perRow = 2 } ) =>
+	${({ $isRow, $perRow = 2 }) =>
 		$isRow
 			? `
         > .wpmvc-field {
           flex: 0 0 100%;
 
           @media (min-width: 768px) {
-            flex: 0 0 calc(${ 100 / $perRow }% - ${
-				( ( $perRow - 1 ) * 20 ) / $perRow
+            flex: 0 0 calc(${100 / $perRow}% - ${(($perRow - 1) * 20) / $perRow
 			}px);
           }
         }
       `
-			: '' }
+			: ''}
 `;
 
 const StyledGroup = styled.div`
@@ -45,19 +44,20 @@ const StyledGroup = styled.div`
 	gap: 8px;
 `;
 
-export default function Group( props: GroupFieldProps ): JSX.Element {
+export default function Group(props: GroupFieldProps): JSX.Element {
 	const { field } = props;
 	return (
 		<StyledGroup className="components-base-field">
 			<label>
-				{ /* @ts-ignore */ }
-				<Label { ...props } />
+				{ /* @ts-ignore */}
+				<Label {...props} />
 			</label>
 			<GroupFields
-				$perRow={ size( field.fields ) }
-				$isRow={ field.isRow }
+				$perRow={size(field.fields)}
+				$isRow={field.isRow}
+				className="group-fields-wrapper"
 			>
-				<PrivateFields { ...props } fields={ field.fields } />
+				<PrivateFields {...props} fields={field.fields} />
 			</GroupFields>
 		</StyledGroup>
 	);
