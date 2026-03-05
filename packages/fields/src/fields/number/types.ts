@@ -4,8 +4,9 @@ import { BaseField, BaseFieldProps } from '../../types/field';
 export type NumberFieldType = BaseField & {
 	type: 'number';
 	precision?: boolean;
-	min?: number | ( ( attributes: Record< string, any > ) => number );
-	max?: number | ( ( attributes: Record< string, any > ) => number );
+	step?: number;
+	min?: number | ((attributes: Record<string, any>) => number);
+	max?: number | ((attributes: Record<string, any>) => number);
 	labelPosition?: LabelPosition;
 };
 
