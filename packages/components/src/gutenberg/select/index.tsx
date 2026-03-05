@@ -14,10 +14,10 @@ import Select, { components, MultiValue, SingleValue } from 'react-select';
 import { Chevron } from './styles';
 import { useApiOptions } from './useApiOptions';
 
-const DropdownIndicator = ( menuIsOpen: boolean ) => ( props: any ) => (
-	<components.DropdownIndicator { ...props }>
+const DropdownIndicator = (menuIsOpen: boolean) => (props: any) => (
+	<components.DropdownIndicator {...props}>
 		<Chevron
-			$open={ menuIsOpen }
+			$open={menuIsOpen}
 			xmlns="http://www.w3.org/2000/svg"
 			width="20"
 			height="20"
@@ -46,10 +46,10 @@ type props = {
 	menuPosition?: 'fixed' | 'absolute';
 	styles?: any;
 	optionsApi?: string;
-	onFetchSuccess?: ( options: any[] ) => void;
+	onFetchSuccess?: (options: any[]) => void;
 };
 
-export default function SelectComponent( props: props ) {
+export default function SelectComponent(props: props) {
 	const {
 		options,
 		optionsApi,
@@ -60,84 +60,77 @@ export default function SelectComponent( props: props ) {
 		isMulti,
 		isClearable,
 	} = props;
-	const [ menuIsOpen, setMenuIsOpen ] = useState( false );
-	const { options: fetchedOptions, isLoading } = useApiOptions( {
+	const [menuIsOpen, setMenuIsOpen] = useState(false);
+	const { options: fetchedOptions, isLoading } = useApiOptions({
 		optionsApi: optionsApi,
 		onFetchSuccess: onFetchSuccess,
-	} );
+	});
 
 	const normalizedOptions = fetchedOptions || options;
 
 	const value = isMulti
-		? ( rawValue || [] )
-				.map(
-					( val: any ) =>
-						normalizedOptions?.find(
-							( opt: any ) => opt.value === val
-						)
-				)
-				.filter( Boolean ) ||
-		  // Ensure empty array if nothing selected
-		  []
+		? (rawValue || [])
+			.map(
+				(val: any) =>
+					normalizedOptions?.find(
+						(opt: any) => opt.value === val
+					)
+			)
+			.filter(Boolean) ||
+		// Ensure empty array if nothing selected
+		[]
 		: // using 2 equal instead of 3 equal to avoid type mismatch
-		  normalizedOptions?.find( ( opt: any ) => opt.value == rawValue ) ??
-		  null;
+		normalizedOptions?.find((opt: any) => opt.value == rawValue) ??
+		null;
 
-	const handleChange = (
-		newValue:
-			| SingleValue< {
-					value: any;
-					label: string;
-			  } >
-			| MultiValue< { value: any; label: string } >
-	) => {
-		if ( isMulti ) {
-			const values = Array.isArray( newValue )
-				? newValue.map( ( option ) => option.value )
+	const handleChange = (newValue: any) => {
+		if (isMulti) {
+			const values = Array.isArray(newValue)
+				? newValue.map((option) => option.value)
 				: [];
-			onChange( values );
+			onChange(values);
 		} else {
-			onChange( ( newValue as any )?.value ?? null );
+			onChange((newValue as any)?.value ?? null);
 		}
 	};
 
 	return (
 		<Select
-			{ ...props }
-			options={ normalizedOptions }
-			onChange={ handleChange }
-			value={ value }
-			isClearable={ isClearable }
-			isLoading={ isLoading }
-			menuIsOpen={ menuIsOpen || undefined }
-			classNamePrefix={ props.classNamePrefix || 'wpmvc' }
-			menuPosition={ props?.menuPosition || 'fixed' }
-			menuPortalTarget={ document.body }
-			onMenuOpen={ () => setMenuIsOpen( true ) }
-			onMenuClose={ () => setMenuIsOpen( false ) }
-			components={ {
-				DropdownIndicator: DropdownIndicator( menuIsOpen ),
+			{...props}
+			options={normalizedOptions}
+			onChange={handleChange}
+			value={value}
+			isClearable={isClearable}
+			isLoading={isLoading}
+			menuIsOpen={menuIsOpen || undefined}
+			classNamePrefix={props.classNamePrefix || 'wpmvc'}
+			menuPosition={props?.menuPosition || 'fixed'}
+			menuPortalTarget={document.body}
+			onMenuOpen={() => setMenuIsOpen(true)}
+			onMenuClose={() => setMenuIsOpen(false)}
+			components={{
+				DropdownIndicator: DropdownIndicator(menuIsOpen),
 				ClearIndicator: isClearable ? components.ClearIndicator : () => null,
 				IndicatorSeparator: () => null,
-			} }
-			styles={ {
-				menu: ( base: any ) => ( {
+			}}
+			styles={{
+				menu: (base: any) => ({
 					...base,
 					zIndex: 10,
 					...styles?.menu,
-				} ),
-				menuPortal: ( base: any ) => ( {
+				}),
+				menuPortal: (base: any) => ({
 					...base,
 					zIndex: 100000,
-				} ),
-				control: ( baseStyles: any, state: any ) => {
+				}),
+				control: (baseStyles: any, state: any) => {
 					return {
 						...baseStyles,
 						...styles?.control,
 					};
 				},
-			} }
-			theme={ ( theme: any ) => ( {
+			}}
+			theme={(theme: any) => ({
 				...theme,
 				colors: {
 					...theme.colors,
@@ -150,7 +143,7 @@ export default function SelectComponent( props: props ) {
 					primary75:
 						'var(--wpmvc-primary-400, color-mix(in srgb, var(--wp-admin-theme-color) 60%, transparent))', // selected + focus
 				},
-			} ) }
+			})}
 		/>
 	);
 }

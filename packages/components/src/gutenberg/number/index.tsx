@@ -8,13 +8,12 @@ import { __experimentalNumberControl as NumberControl } from '@wordpress/compone
  */
 import { NumberFieldType } from './types';
 
-export default function Number( props: NumberFieldType ): JSX.Element {
+export default function Number(props: NumberFieldType): JSX.Element {
 	return (
 		<NumberControl
-			{ ...props }
-			help={ props.description }
+			{...props}
+			help={props.description}
 			size="__unstable-large"
-			step={ 1 }
 		/>
 	);
 }

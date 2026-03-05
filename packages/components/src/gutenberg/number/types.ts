@@ -12,4 +12,5 @@ export type NumberFieldType = {
 	className?: string;
 	required?: boolean;
 	labelPosition?: LabelPosition;
+	step?: number;
 };
